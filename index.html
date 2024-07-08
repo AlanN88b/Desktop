@@ -16,12 +16,13 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            background-color: transparent; /* Fondo completamente transparente */
+            background-color: transparent;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
+            transition: top 0.3s;
         }
         .menu-icons-container {
             display: flex;
@@ -31,7 +32,7 @@
             display: flex;
             flex-direction: column;
             cursor: pointer;
-            margin-right: 20px; /* Espacio antes del carrito */
+            margin-right: 20px;
         }
         .menu-icon div {
             width: 25px;
@@ -47,16 +48,11 @@
             top: 0;
             left: 0;
             height: 100%;
-            width: 250px;
+            width: 240px;
             z-index: 1000;
             transform: translateX(-100%);
             transition: transform 0.3s ease;
-        }
-        .menu a {
-            padding: 15px 20px;
-            text-decoration: none;
-            color: #333;
-            border-bottom: 1px solid #ddd;
+            overflow-y: auto;
         }
         .menu.show {
             display: flex;
@@ -67,28 +63,48 @@
             padding: 15px 20px;
             cursor: pointer;
         }
+        .menu a {
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
         .search-bar {
             display: flex;
             align-items: center;
-            border: 2px solid #FFD700;
+            border: 2px solid transparent;
             border-radius: 4px;
             overflow: hidden;
-            max-width: 400px; /* Reducir el ancho máximo */
-            flex-grow: 1;
-            margin-right: 20px;
-            background-color: transparent; /* Campo de búsqueda transparente */
+            max-width: 0;
+            transition: max-width 0.3s ease, padding 0.3s ease, border-color 0.3s ease;
+            padding-right: 0;
+            background-color: #fff;
+            height: 30px;
+            visibility: hidden;
+        }
+        .search-bar.open {
+            max-width: 400px;
+            padding-right: 8px;
+            border-color: #FFD700;
+            visibility: visible;
         }
         .search-bar input[type="text"] {
-            padding: 8px; /* Reducir el padding */
+            padding: 8px;
             border: none;
             outline: none;
-            font-size: 14px; /* Reducir el tamaño de la fuente */
+            font-size: 14px;
             flex-grow: 1;
-            background-color: transparent; /* Campo de búsqueda transparente */
+            background-color: transparent;
+            width: 100%;
         }
         .search-bar button {
-            width: 40px; /* Reducir el ancho */
-            height: 40px; /* Reducir la altura */
+            width: 35px;
+            height: 35px;
             border: none;
             background-color: #FFD700;
             color: #000;
@@ -104,6 +120,17 @@
         }
         .icons img {
             margin-left: 10px;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+        }
+        .cart-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        .cart-container img {
             width: 24px;
             height: 24px;
             cursor: pointer;
@@ -111,27 +138,54 @@
         .cart-count {
             position: absolute;
             top: -5px;
-            right: 0;
+            right: -5px;
             background-color: red;
             color: white;
             border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 12px;
+            padding: 2px 4px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .cart-items {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 30px;
+            left: 0;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            z-index: 1000;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        .cart-items.show {
+            display: flex;
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
         .logo {
             cursor: pointer;
-            margin-left: 10px;
-            width: 50px; /* Tamaño del logo */
-            height: 50px; /* Tamaño del logo */
+            width: 60px;
+            height: 60px;
+            margin-left: auto;
+            margin-right: 30px;
         }
         .container {
-            margin-top: 80px; /* Ajustar el margen superior */
+            margin-top: 80px;
             padding: 20px;
         }
         .product-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 40px 30px; /* Más espacio entre las filas */
+            gap: 40px 30px;
             justify-items: center;
         }
         .product-card {
@@ -139,32 +193,52 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            width: 300px; /* Ajustar el tamaño de las tarjetas de producto */
+            width: 300px;
             text-align: center;
-            padding: 20px; /* Aumentar el padding */
+            padding: 20px;
         }
         .product-card img {
             width: 100%;
             height: auto;
-            max-height: 200px; /* Aumentar la altura máxima de las imágenes */
-            object-fit: contain; /* Ajustar la imagen para que se contenga dentro del contenedor */
+            max-height: 200px;
+            object-fit: contain;
             cursor: pointer;
         }
         .product-card .product-name {
-            font-size: 18px; /* Aumentar el tamaño de la fuente */
-            margin: 15px 0; /* Aumentar el margen */
+            font-size: 18px;
+            margin: 15px 0;
         }
         .product-card .product-price {
-            font-size: 16px; /* Aumentar el tamaño de la fuente */
+            font-size: 16px;
             color: #666;
         }
         .product-card .add-to-cart {
             background-color: #FFD700;
             border: none;
-            padding: 12px 20px; /* Aumentar el padding */
+            padding: 12px 20px;
             cursor: pointer;
             border-radius: 4px;
-            margin-top: 15px; /* Aumentar el margen */
+            margin-top: 15px;
+        }
+        .contact-section {
+            background-color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .contact-section h3 {
+            margin-bottom: 20px;
+        }
+        .contact-section a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #000;
+        }
+        .contact-section a img {
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
         }
         @media (max-width: 768px) {
             .menu-icon {
@@ -172,7 +246,7 @@
             }
             .search-bar {
                 flex-grow: 0;
-                max-width: 200px; /* Reducir aún más el ancho en pantallas pequeñas */
+                max-width: 200px;
             }
             .product-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -186,64 +260,44 @@
                 grid-template-columns: 1fr;
             }
         }
-        .cart-items {
-            display: none;
-            flex-direction: column;
-            position: absolute;
-            top: 40px;
-            right: 0;
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-            z-index: 1000;
-        }
-        .cart-items.show {
-            display: flex;
-        }
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
-    <div class="navbar">
+    <div class="navbar" id="navbar">
         <div class="menu-icons-container">
             <div class="menu-icon" onclick="toggleMenu()">
                 <div></div>
                 <div></div>
                 <div></div>
             </div>
-            <a href="#" onclick="refreshPage()">
-                <img src="perfil.jpg" alt="Logo" class="logo">
-            </a>
-            <div class="icons">
-                <div style="position: relative;">
-                    <img src="carrito.png" alt="Carrito" onclick="toggleCart()">
-                    <div class="cart-count" id="cart-count">0</div>
-                    <div class="cart-items" id="cart-items">
-                        <h3>Carrito de compras</h3>
-                        <div id="cart-items-list"></div>
-                        <button onclick="clearCart()">Vaciar carrito</button>
-                        <button onclick="checkout()">Enviar a WhatsApp</button>
-                    </div>
+            <div class="cart-container">
+                <img src="carrito.png" alt="Carrito" onclick="toggleCart()">
+                <div class="cart-count" id="cart-count">0</div>
+                <div class="cart-items" id="cart-items">
+                    <h3>Carrito de compras</h3>
+                    <div id="cart-items-list"></div>
+                    <button onclick="clearCart()">Vaciar carrito</button>
+                    <button onclick="checkout()">Enviar a WhatsApp</button>
+                </div>
+            </div>
+            <div class="search-container">
+                <img src="lupa.png" alt="Buscar" onclick="toggleSearchBar()" style="width: 24px; height: 24px; cursor: pointer;">
+                <div class="search-bar" id="search-bar">
+                    <input type="text" placeholder="Buscar en nuestra tienda">
                 </div>
             </div>
         </div>
-        <div class="search-bar">
-            <input type="text" placeholder="Buscar en nuestra tienda">
-            <button>
-                <img src="lupa.png" alt="Buscar" width="16" height="16">
-            </button>
+        <div class="icons">
+            <a href="#" onclick="refreshPage()">
+                <img src="perfil.jpg" alt="Perfil" class="logo">
+            </a>
         </div>
     </div>
     <div class="menu" id="menu">
         <div class="close-btn" onclick="toggleMenu()">x</div>
         <a href="#categoria">Categoría</a>
         <a href="#todos-productos">Todos los productos</a>
-        <a href="#contactanos">Contáctanos</a>
+        <a href="#contact-section" onclick="scrollToContact()">Contáctanos</a>
     </div>
     <div class="container">
         <div class="product-grid">
@@ -309,12 +363,42 @@
             </div>
         </div>
     </div>
+    <div class="contact-section" id="contact-section">
+        <h3>Contáctanos</h3>
+        <a href="https://www.instagram.com/" target="_blank">
+            <img src="instagram.png" alt="Instagram">
+        </a>
+        <a href="https://www.facebook.com/" target="_blank">
+            <img src="facebook.png" alt="Facebook">
+        </a>
+        <a href="https://wa.me/50495600051" target="_blank">
+            <img src="whatsapp.png" alt="WhatsApp">
+        </a>
+    </div>
     <script>
         let cart = [];
+        let lastScrollTop = 0;
+
+        window.addEventListener("scroll", function() {
+            const navbar = document.getElementById('navbar');
+            let st = window.pageYOffset || document.documentElement.scrollTop;
+            if (st > lastScrollTop){
+                navbar.style.top = "-80px"; // Desaparece la barra
+            } else {
+                navbar.style.top = "0"; // Aparece la barra
+            }
+            lastScrollTop = st <= 0 ? 0 : st; // Para Mobile o en caso de que hayan scrolls negativos
+        }, false);
 
         function toggleMenu() {
             const menu = document.getElementById('menu');
             menu.classList.toggle('show');
+        }
+
+        function scrollToContact() {
+            const menu = document.getElementById('menu');
+            menu.classList.remove('show');
+            document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' });
         }
 
         function refreshPage() {
@@ -376,6 +460,11 @@
             const message = `Hola, estos son los productos que quiero comprar: ${cart.join(', ')}`;
             const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
+        }
+
+        function toggleSearchBar() {
+            const searchBar = document.getElementById('search-bar');
+            searchBar.classList.toggle('open');
         }
     </script>
 </body>
